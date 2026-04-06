@@ -1,2 +1,590 @@
-# Mammo-FM
-Code will be uploaded soon
+# Mammo-FM: Breast-specific foundational model for Integrated
+
+Mammographic Diagnosis, Prognosis, and Reporting
+
+[![Paper](https://img.shields.io/badge/Paper-9cf)](https://arxiv.org/pdf/2512.00198)
+[![Hugging Face](https://img.shields.io/badge/Checkpoints-Hugging%20Face-yellow)](https://huggingface.co/shawn24/Mammo-FM/tree/main/Pre-trained-checkpoints/)
+[![VinDr png data](https://img.shields.io/badge/VinDr%20Mammogram%20png%20images-lightblue)](https://www.kaggle.com/datasets/shantanughosh/vindr-mammogram-dataset-dicom-to-png)
+![](https://visitor-badge.laobi.icu/badge?page_id=batmanlab.FM&right_color=%23FFA500)
+
+#### ⚠️ WARNING: Look for `/restricted/projectnb/batmanlab/shawn24/PhD` and replace it with your own path. E.g,
+
+`.src/codebase/breastclip/data/datasets/imagetext.py`, change the json path
+
+#### ⚠️ WARNING: There is a plethora of pre-processing settings available for RSNA and VinDr Mammo datasets. We recommend using the pre-processing discussed in the following sections. We are not responsible for any discrepancies in the results due to different pre-processing settings. If you use the VinDr png dataset uploaded in kaggle, it is fully pre-processed. Else you can use the pre-processing scripts provided in the following sections.
+
+#### ⚠️ WARNING: If you find the `punkt_tab` error, run the following command in the python environment:
+
+```python
+import nltk
+
+nltk.download('punkt_tab')
+```
+
+## FAQ
+
+We follow our previous code [Mammo-FM](https://github.com/batmanlab/Mammo-FM) strictly. We will update the
+pretraining setup shortly. This code is for validating Mammo-FM checkpoints for diagnostic (e.g., downstream
+classification on linear probe and full-finetuning) performance only. Zero-shot, prognostic and report generation will
+be uploaded in coming weeks.
+
+## Table of Contents
+
+## Environment Setup
+
+Use [environment.yml](https://github.com/batmanlab/Mammo-FM/blob/main/environment.yml) to setup the environment.
+
+```bash
+git clone git@github.com:batmanlab/Mammo-FM.git
+cd Mammo-FM
+conda env create --name Mammo-FM -f environment.yml
+conda activate Mammo-FM
+```
+
+Mammo-FM is implemented with following specification:
+
+* Python version: 3.9+
+* PyTorch version: 2.2.2
+* CUDA version: 11.8
+
+## Data Download
+
+Download the original versions VinDr and RSNA from the links for downstream evaluations:
+
+- [RSNA](https://www.kaggle.com/competitions/rsna-breast-cancer-detection)
+- [VinDr](https://vindr.ai/datasets/mammo)
+
+For the PNG images converted from the original Dicom images, as mentioned in the preprocessing steps in the paper, refer
+to the following links:
+
+- [VinDr](https://www.kaggle.com/datasets/shantanughosh/vindr-mammogram-dataset-dicom-to-png)
+
+To preprocess the dicom images directly, follow the instructions in the next section. If you downloaded the PNG images,
+skip the preprocessing steps.
+
+## Pre-processing images
+
+### Convert to png: RSNA
+
+```bash
+python ./src/preprocessing/preprocess_image_to_png_kaggle.py \
+  --phase="test" \
+  --base_folder="/restricted/projectnb/batmanlab/shawn24/PhD/RSNA_Breast_Imaging/Dataset/RSNA_Cancer_Detection"
+```
+
+### convert to png: VinDr
+
+```bash
+python ./src/preprocessing/preprocess_image_to_png_vindr.py \
+  --phase="test" \
+  --base_folder="/restricted/projectnb/batmanlab/shawn24/PhD/RSNA_Breast_Imaging/Dataset/External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0"
+```
+
+## Final dataset directory structures
+
+### Image+Text pretraining dataset
+
+```bash
+.
+├── list_tree_files.sh
+├── upmc_dicom_consolidated_final_folds_BIRADS_num_1_report.csv
+├── clip_pretrain_100.csv
+└── DICOM/images_png_CC_MLO/
+    ├── Patient_100/
+    │   ├── 1.png
+    │   ├── 2.png
+    └── Patient_200/
+        ├── 3.png
+        ├── 4.png
+        ├── 53.png
+        ├── 6.png
+        └── 7.png
+        
+
+```
+
+### VinDr
+
+```bash
+.
+├── breast-level_annotations.csv
+├── finding_annotations.csv
+├── vindr_detection_v1_folds.csv 
+├── clip_vindr_final.csv
+└── images_png/
+    ├── c7811f4575c1229ad4a7606de49ea68f/
+    │   ├── 9eb4650a2b630e44074c403f6127c5a1.png
+    │   ├── cc3fdc5d733a671f3000e20838e192d9.png
+    │   ├── 181fd193d3b785dc9faafdaa8e1695fc.png
+    │   └── 55eb5ea616abacd225e584ffc8be57da.png
+    └── a1dd219b28806fc295fac20ceb147870/
+        ├── 887cdcc99ebed66bd062ada6c8210152.png
+        ├── 36f2921a2ac19eba7420c591c4c07ae4.png
+        ├── 12dc17dfd9d30ea7c0c1ccb33a505085.png
+        └── e22e4f297b4c82279e7b78a98417a6cd.png
+```
+
+### RSNA
+
+```bash
+.
+├── train_folds.csv
+├── train_images_png/
+    ├── 59549/
+    │   ├── 1154694388.png
+    │   ├── 1192817932.png
+    │   ├── 1979035704.png
+    │   ├── 2022274082.png
+    │   ├── 431013616.png
+    │   ├── 457600713.png
+    │   ├── 78005871.png
+    │   └── 856162422.png
+    └── 28242/
+        ├── 1966298736.png
+        ├── 233201459.png
+        ├── 349787619.png
+        └── 98615814.png
+
+
+```
+
+## Mammo-FM checkpoints
+
+Following are the pre-training checkpoints of Mammo-FM:
+
+| Model architecture | Checkpoints (Hugging Face)                                                                                                 |
+|--------------------|----------------------------------------------------------------------------------------------------------------------------|
+| Best performance   | [Efficient-Net B5]()  |
+
+
+
+## Evaluation
+
+### Zero-shot evaluation of Mammo-FM
+
+[To be uploaded]
+
+### Linear probe vision encoder Mammo-FM on target classification task
+
+```bash
+python ./src/codebase/train_classifier.py \
+  --data-dir '/restricted/projectnb/batmanlab/shawn24/PhD/RSNA_Breast_Imaging/Dataset' \
+  --img-dir 'External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/images_png' \
+  --csv-file 'External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/vindr_detection_v1_folds.csv' \
+  --clip_chk_pt_path "/restricted/projectnb/batmanlab/shawn24/PhD/Mammo-FM/src/codebase/outputs/upmc_clip/b5_detector_period_n/checkpoints/fold_0/b5-model-best-epoch-7.tar" \
+  --data_frac 1.0 \
+  --dataset 'ViNDr' \
+  --arch 'upmc_breast_clip_det_b5_period_n_lp' \
+  --label "Mass" \
+  --epochs 30 \
+  --batch-size 8 \
+  --num-workers 0 \
+  --print-freq 10000 \
+  --log-freq 500 \
+  --running-interactive 'n' \
+  --n_folds 1 \
+  --lr 5.0e-5 \
+  --weighted-BCE 'y' \
+  --balanced-dataloader 'n' 
+```
+
+* `data-dir`: root directory of the dataset
+* `img-dir`: directory containing images, absolute path: `data-dir/img-dir`
+* `csv-file`: csv file containing image paths and labels, absolute path: `data-dir/csv-file`
+* `clip_chk_pt_path`: path to the checkpoint of the pre-trained Mammo-FM model
+* `dataset`: dataset name, e.g., `ViNDr` or `RSNA`
+* `data_frac`: fraction of the dataset to use for training, e.g., `1.0`, `0.5` etc
+* `arch`: architecture of the model, e.g., `upmc_breast_clip_det_b5_period_n_lp` for Efficient-Net B5
+  or `upmc_breast_clip_det_b2_period_n_lp` for Efficient-Net B2, pretrained on UPMC dataset.
+  Also, `upmc_vindr_breast_clip_det_b5_period_n_lp` for Efficient-Net B5
+  or `upmc_vindr_breast_clip_det_b2_period_n_lp` for Efficient-Net B2, pretrained on UPMC and VinDr datasets.
+* `label`: target label for classification, e.g., `Mass`, `Suspicious_Calcification`or `density` for ViNDr
+  dataset; `cancer` for RSNA dataset
+* `running-interactive`: running on interactive mode. In this mode,the training will be done using 100 samples for
+  sanity check
+
+### Finetune vision encoder Mammo-FM on target classification task
+
+```bash
+python ./src/codebase/train_classifier.py \
+  --data-dir '/restricted/projectnb/batmanlab/shawn24/PhD/RSNA_Breast_Imaging/Dataset' \
+  --img-dir 'External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/images_png' \
+  --csv-file 'External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/vindr_detection_v1_folds.csv' \
+  --clip_chk_pt_path "/restricted/projectnb/batmanlab/shawn24/PhD/Mammo-FM/src/codebase/outputs/upmc_clip/b5_detector_period_n/checkpoints/fold_0/b5-model-best-epoch-7.tar" \
+  --data_frac 1.0 \
+  --dataset 'ViNDr' \
+  --arch 'upmc_breast_clip_det_b5_period_n_ft' \
+  --label "Mass" \
+  --epochs 30 \
+  --batch-size 8 \
+  --num-workers 0 \
+  --print-freq 10000 \
+  --log-freq 500 \
+  --running-interactive 'n' \
+  --n_folds 1 \
+  --lr 5.0e-5 \
+  --weighted-BCE 'y' \
+  --balanced-dataloader 'n'
+ ```
+
+* `data-dir`: root directory of the dataset
+* `img-dir`: directory containing images, absolute path: `data-dir/img-dir`
+* `csv-file`: csv file containing image paths and labels, absolute path: `data-dir/csv-file`
+* `clip_chk_pt_path`: path to the checkpoint of the pre-trained Mammo-FM model
+* `dataset`: dataset name, e.g., `ViNDr` or `RSNA`
+* `data_frac`: fraction of the dataset to use for training, e.g., `1.0`, `0.5` etc
+* `arch`: `arch`: architecture of the model, e.g., `upmc_breast_clip_det_b5_period_n_ft` for Efficient-Net B5
+  or `upmc_breast_clip_det_b2_period_n_ft` for Efficient-Net B2, pretrained on UPMC dataset.
+  Also, `upmc_vindr_breast_clip_det_b5_period_n_ft` for Efficient-Net B5
+  or `upmc_vindr_breast_clip_det_b2_period_n_ft` for Efficient-Net B2, pretrained on UPMC and VinDr datasets.
+* `label`: target label for classification, e.g., `Mass`, `Suspicious_Calcification`or `density` for ViNDr
+  dataset; `cancer` for RSNA dataset
+* `running-interactive`: running on interactive mode. In this mode,the training will be done using 100 samples for
+  sanity check
+
+### Linear probe vision encoder Mammo-FM on target detection task
+
+```bash
+python ./src/codebase/train_detector.py \
+  --data-dir '/restricted/projectnb/batmanlab/shawn24/PhD/RSNA_Breast_Imaging/Dataset' \
+  --img-dir 'External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/images_png' \
+  --csv-file 'External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/vindr_detection_v1_folds.csv' \
+  --clip_chk_pt_path "/restricted/projectnb/batmanlab/shawn24/PhD/Mammo-FM/src/codebase/outputs/upmc_clip/b5_detector_period_n/checkpoints/fold_0/b5-model-best-epoch-7.tar" \
+  --dataset 'ViNDr' \
+  --arch 'clip_b5_upmc' \
+  --epochs 120 \
+  --batch-size 7 \
+  --freeze_backbone "y" \
+  --data_frac 1.0 \
+  --concepts 'Mass' \
+  --print-freq 5000 \
+  --log-freq 300 \
+  --running-interactive 'n' \
+  --focal-alpha 0.25 \
+  --focal-gamma 2.0 \
+  --score-threshold 0.2
+ ```
+
+* `data-dir`: root directory of the dataset
+* `img-dir`: directory containing images, absolute path: `data-dir/img-dir`
+* `csv-file`: csv file containing image paths and labels, absolute path: `data-dir/csv-file`
+* `clip_chk_pt_path`: path to the checkpoint of the pre-trained Mammo-FM model
+* `dataset`: dataset name, e.g., `ViNDr`
+* `data_frac`: fraction of the dataset to use for training, e.g., `1.0`, `0.5` etc
+* `arch`: architecture of the model, e.g., `clip_b5_upmc` for Efficient-Net B5 or `clip_b2_upmc` for Efficient-Net B2,
+  pretrained on UPMC dataset. Similarly, `clip_b5_upmc_vindr` for Efficient-Net B5 or `clip_b2_upmc_vindr` for
+  Efficient-Net B2,
+  pretrained on UPMC and VinDr datasets.
+* `concepts`: target label for classification, e.g., `Mass`, `Suspicious Calcification` for ViNDr dataset
+* `running-interactive`: running on interactive mode. In this mode,the training will be done using 100 samples for
+  sanity check
+* `freeze_backbone`: freeze the backbone of the model, for linear probe, set to `y`
+
+### Finetune vision encoder Mammo-FM on target detection task
+
+```bash
+python ./src/codebase/train_detector.py \
+  --data-dir '/restricted/projectnb/batmanlab/shawn24/PhD/RSNA_Breast_Imaging/Dataset' \
+  --img-dir 'External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/images_png' \
+  --csv-file 'External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/vindr_detection_v1_folds.csv' \
+  --clip_chk_pt_path "/restricted/projectnb/batmanlab/shawn24/PhD/Mammo-FM/src/codebase/outputs/upmc_clip/b5_detector_period_n/checkpoints/fold_0/b5-model-best-epoch-7.tar" \
+  --dataset 'ViNDr' \
+  --arch 'clip_b5_upmc' \
+  --epochs 120 \
+  --batch-size 7 \
+  --freeze_backbone "n" \
+  --data_frac 1.0 \
+  --concepts 'Mass' \
+  --print-freq 5000 \
+  --log-freq 300 \
+  --running-interactive 'n' \
+  --focal-alpha 0.25 \
+  --focal-gamma 2.0 \
+  --score-threshold 0.2
+ ```
+
+* `data-dir`: root directory of the dataset
+* `img-dir`: directory containing images, absolute path: `data-dir/img-dir`
+* `csv-file`: csv file containing image paths and labels, absolute path: `data-dir/csv-file`
+* `clip_chk_pt_path`: path to the checkpoint of the pre-trained Mammo-FM model
+* `dataset`: dataset name, e.g., `ViNDr`
+* `data_frac`: fraction of the dataset to use for training, e.g., `1.0`, `0.5` etc
+* `arch`: architecture of the model, e.g., `clip_b5_upmc` for Efficient-Net B5 or `clip_b2_upmc` for Efficient-Net B2,
+  pretrained on UPMC dataset. Similarly, `clip_b5_upmc_vindr` for Efficient-Net B5 or `clip_b2_upmc_vindr` for
+  Efficient-Net B2,
+  pretrained on UPMC and VinDr datasets.
+* `concepts`: target label for classification, e.g., `Mass`, `Suspicious Calcification` for ViNDr dataset
+* `running-interactive`: running on interactive mode. In this mode,the training will be done using 100 samples for
+  sanity check
+* `freeze_backbone`: freeze the backbone of the model, for finetune, set to `n`
+
+## Downstream run scripts (bash)
+
+For downstream experiments we keep bash entrypoints
+in [src/scripts](/Users/shantanughosh/Desktop/Shantanu_PhD/Research/Mammo-FM/Mammo-FM/src/scripts) named
+`<dataset>_<task>_run.sh`. These are intended for running the same training commands from a shell or job scheduler with
+dataset-specific defaults. Current examples include `cmmd_classification_run.sh`, `nl_breast_classification_run.sh`,
+`vindr_abnormal_classification_run.sh`, `vindr_classification_run.sh`, and `vindr_detection_run.sh`.
+
+The blocks below are single-run examples that mirror those scripts. Update paths for your environment and pick the
+checkpoint you want to evaluate.
+
+### RSNA classification (density)
+
+```bash
+DATASET_NAME="RSNA"
+CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar"
+DATA_DIR="/restricted/projectnb/batmanlab/shared/Data/RSNA_Breast_Imaging/Dataset"
+IMG_DIR="RSNA_Cancer_Detection/train_images_png"
+CSV_FILE="RSNA_Cancer_Detection/train_folds.csv"
+EXTRA_ARGS="--label 'cancer' --n_folds 1"
+LABEL="density"
+
+CLIP_CKPT="/restricted/projectnb/batmanlab/ayak/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bumc_clip/b5_detector_no_downstream_no_birads_prompt_period_no_cancer_no_ethnicity_n_modernbert_2048/checkpoints/fold_0/model-best.tar"
+# Note: if you set CLIP_CKPT multiple times, the last assignment wins.
+
+python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/codebase/train_classifier.py \
+  --data-dir "$DATA_DIR" \
+  --img-dir "$IMG_DIR" \
+  --csv-file "$CSV_FILE" \
+  --data_frac "1.0" \
+  --dataset "$DATASET_NAME" \
+  --arch "breast_clip_det_b5_period_n_lp" \
+  --clip_chk_pt_path "$CLIP_CKPT" \
+  --epochs 2 \
+  --batch-size 2 \
+  --num-workers 2 \
+  --lr 5e-5 \
+  --weight-decay 1e-4 \
+  --warmup-epochs 1 \
+  --print-freq 500 \
+  --log-freq 500 \
+  --running-interactive 'y' \
+  --weighted-BCE 'y' \
+  --balanced-dataloader 'n' \
+  --label "$LABEL" \
+  --n_folds 1
+```
+
+### VinDr classification (abnormal)
+
+```bash
+DATASET_NAME="VINDR"
+CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar"
+DATA_DIR="/restricted/projectnb/batmanlab/shared/Data/RSNA_Breast_Imaging/Dataset"
+IMG_DIR="External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/images_png"
+CSV_FILE="External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/vindr_detection_v1_folds_abnormal.csv"
+TASK_TYPE="classification"
+WEIGHTED_BCE="n"
+LABEL="abnormal"
+EXTRA_ARGS="--label 'abnormal' --n_folds 1"
+
+python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/codebase/train_classifier.py \
+  --data-dir "$DATA_DIR" \
+  --img-dir "$IMG_DIR" \
+  --csv-file "$CSV_FILE" \
+  --data_frac "1.0" \
+  --dataset "$DATASET_NAME" \
+  --arch "breast_clip_det_b5_period_n_lp" \
+  --clip_chk_pt_path "$CLIP_CKPT" \
+  --epochs 2 \
+  --batch-size 2 \
+  --num-workers 2 \
+  --lr 5e-5 \
+  --weight-decay 1e-4 \
+  --warmup-epochs 1 \
+  --print-freq 500 \
+  --log-freq 500 \
+  --running-interactive 'n' \
+  --weighted-BCE 'y' \
+  --balanced-dataloader 'n' \
+  --label "$LABEL" \
+  --n_folds 1
+```
+
+### CMMD classification (cancer)
+
+```bash
+DATASET_NAME="CMMD"
+CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar"
+DATA_DIR="/restricted/projectnb/batmanlab/shawn24/Additional_Breast_data/ChineseMammoDataset"
+IMG_DIR="cmmd_png"
+CSV_FILE="cmmd_png/merged_final_cmmd.csv"
+TASK_TYPE="classification"
+WEIGHTED_BCE="n"
+LABEL="cancer"
+EXTRA_ARGS="--label 'cancer' --n_folds 1"
+
+python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/codebase/train_classifier.py \
+  --data-dir "$DATA_DIR" \
+  --img-dir "$IMG_DIR" \
+  --csv-file "$CSV_FILE" \
+  --data_frac "1.0" \
+  --dataset "$DATASET_NAME" \
+  --inference_mode "y" \
+  --arch "breast_clip_det_b5_period_n_ft" \
+  --clip_chk_pt_path "$CLIP_CKPT" \
+  --epochs 2 \
+  --batch-size 8 \
+  --num-workers 2 \
+  --lr 5e-5 \
+  --weight-decay 1e-4 \
+  --warmup-epochs 1 \
+  --print-freq 500 \
+  --log-freq 500 \
+  --running-interactive 'n' \
+  --weighted-BCE 'y' \
+  --balanced-dataloader 'n' \
+  --label "$LABEL" \
+  --n_folds 1
+```
+
+### NL-Breast classification (cancer)
+
+```bash
+DATASET_NAME="NLBreast"
+CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar"
+DATA_DIR="/restricted/projectnb/batmanlab/shared/Data/NL-Breast-Screen-data"
+IMG_DIR="NLBS_Data_png_v1"
+CSV_FILE="nlbs_image_labels.csv"
+TASK_TYPE="classification"
+WEIGHTED_BCE="n"
+LABEL="cancer"
+EXTRA_ARGS="--label 'cancer' --n_folds 1"
+
+python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/codebase/train_classifier.py \
+  --data-dir "$DATA_DIR" \
+  --img-dir "$IMG_DIR" \
+  --csv-file "$CSV_FILE" \
+  --data_frac "1.0" \
+  --dataset "$DATASET_NAME" \
+  --arch "breast_clip_det_b5_period_n_ft" \
+  --clip_chk_pt_path "$CLIP_CKPT" \
+  --epochs 2 \
+  --batch-size 8 \
+  --num-workers 2 \
+  --lr 5e-5 \
+  --weight-decay 1e-4 \
+  --warmup-epochs 1 \
+  --print-freq 500 \
+  --log-freq 500 \
+  --running-interactive 'y' \
+  --weighted-BCE 'y' \
+  --balanced-dataloader 'n' \
+  --label "$LABEL" \
+  --n_folds 1
+```
+
+### VinDr detection (Mass)
+
+```bash
+DATASET_NAME="ViNDr"
+DATA_DIR="/restricted/projectnb/batmanlab/shared/Data/RSNA_Breast_Imaging/Dataset"
+IMG_DIR="External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/images_png"
+CSV_FILE="External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/vindr_detection_v1_folds.csv"
+TASK_TYPE="Detection"
+
+CKPT_KEY="upmc_embed_bu_mayo"
+CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar"
+LABEL="Mass"
+ARCH="breast_clip_det_b5"
+
+python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/codebase/train_detector.py \
+  --data-dir "$DATA_DIR" \
+  --img-dir "$IMG_DIR" \
+  --csv-file "$CSV_FILE" \
+  --dataset "$DATASET_NAME" \
+  --arch "$ARCH" \
+  --epochs 120 \
+  --batch-size 7 \
+  --freeze_backbone "n" \
+  --data_frac 1.0 \
+  --concepts "$LABEL" \
+  --clip_chk_pt "$CLIP_CKPT" \
+  --print-freq 5000 \
+  --log-freq 300 \
+  --running-interactive 'n' \
+  --focal-alpha 0.25 \
+  --focal-gamma 2.0 \
+  --score-threshold 0.2
+```
+
+## Tutorial Notebooks
+
+* For a quick look at setting up the downstream classifier, follow the
+  notebook: [Downstream_classifier_tutorial.ipynb](https://github.com/batmanlab/Mammo-FM/blob/main/src/codebase/notebooks/Tutorial/Downstream_classifier_tutorial.ipynb)
+* For a quick look at downloading the image embeddings from the vision encoder of Mammo-FM, follow the
+  notebook: [Get_Embedding_Vision_encoder_Mammo_CLIP_tutorial.ipynb](https://github.com/batmanlab/Mammo-FM/blob/main/src/codebase/notebooks/Tutorial/Get_Embedding_Vision_encoder_Mammo_CLIP_tutorial.ipynb)
+
+## Additional scripts
+
+For all the training scripts, we add them in
+the [scripts](https://github.com/batmanlab/Mammo-FM/tree/main/src/scripts) directory:
+
+| Scripts                                                                                                                              | Purpose                                                           |
+|--------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| [pretrain_mammo_clip_b5.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/pretrain_mammo_clip_b5.sh)                 | Pretrain Mammo-FM b5 with image+text data                       |
+| [pretrain_mammo_clip_b5_ddp.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/pretrain_mammo_clip_b5_ddp.sh)         | Pretrain Mammo-FM b5 with image+text data using multiple GPUs   |
+| [pretrain_mammo_clip_b2.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/pretrain_mammo_clip_b2.sh)                 | Pretrain Mammo-FM b2 with image+text data                       |
+| [pretrain_mammo_clip_b2_ddp.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/pretrain_mammo_clip_b2_ddp.sh)         | Pretrain Mammo-FM b2 with image+text data using multiple GPUs   |
+| [pretrain_mammo_clip_w_vindr_b5.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/pretrain_mammo_clip_w_vindr_b5.sh) | Pretrain Mammo-FM b5 with image+text data and image+label data  |
+| [classifier_fine_tune_b5.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/classifier_fine_tune_b5.sh)               | Evaluate Mammo-FM b5 on fine tuning tasks for classification    |
+| [classifier_fine_tune_b2.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/classifier_fine_tune_b2.sh)               | Evaluate Mammo-FM b2 on fine tuning tasks for classification    |
+| [classifier_linear_probe_b5.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/classifier_linear_probe_b5.sh)         | Evaluate Mammo-FM b5 on linear probing tasks for classification |
+| [classifier_linear_probe_b2.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/classifier_linear_probe_b2.sh)         | Evaluate Mammo-FM b2 on linear probing tasks for classification |
+| [detector_fine_tune_b5.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/detector_fine_tune_b5.sh)                   | Evaluate Mammo-FM b5 on fine tuning tasks for detection         |
+| [detector_fine_tune_b2.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/detector_fine_tune_b2.sh)                   | Evaluate Mammo-FM b2 on fine tuning tasks for detection         |
+| [detector_linear_probe_b5.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/detector_linear_probe_b5.sh)             | Evaluate Mammo-FM b5 on linear probing tasks for detection      |
+| [detector_linear_probe_b2.sh](https://github.com/batmanlab/Mammo-FM/blob/main/src/scripts/detector_linear_probe_b2.sh)             | Evaluate Mammo-FM b2 on linear probing tasks for detection      |
+
+## Mammo-FActOR
+
+For training Mammo-FActOR, refer to the
+following [notebook](https://github.com/batmanlab/Mammo-FM/blob/main/src/codebase/notebooks/Mammo-Factor/Mammo-Factor.ipynb).
+
+## Citation
+
+```bibtex
+@InProceedings{10.1007/978-3-031-72390-2_59,
+author="Ghosh, Shantanu
+and Poynton, Clare B.
+and Visweswaran, Shyam
+and Batmanghelich, Kayhan",
+editor="Linguraru, Marius George
+and Dou, Qi
+and Feragen, Aasa
+and Giannarou, Stamatia
+and Glocker, Ben
+and Lekadir, Karim
+and Schnabel, Julia A.",
+title="Mammo-FM: A Vision Language Foundation Model to Enhance Data Efficiency and Robustness in Mammography",
+booktitle="Medical Image Computing and Computer Assisted Intervention -- MICCAI 2024",
+year="2024",
+publisher="Springer Nature Switzerland",
+address="Cham",
+pages="632--642",
+abstract="The lack of large and diverse training data on Computer-Aided Diagnosis (CAD) in breast cancer detection has been one of the concerns that impedes the adoption of the system. Recently, pre-training with large-scale image text datasets via Vision-Language models (VLM) (e.g., CLIP) partially addresses the issue of robustness and data efficiency in computer vision (CV). This paper proposes Mammo-FM, the first VLM pre-trained on a substantial amount of screening mammogram-report pairs, addressing the challenges of dataset diversity and size. Our experiments on two public datasets demonstrate strong performance in classifying and localizing various mammographic attributes crucial for breast cancer detection, showcasing data efficiency and robustness similar to CLIP in CV. We also propose Mammo-FActOR, a novel feature attribution method, to provide spatial interpretation of representation with sentence-level granularity within mammography reports. Code is available publicly: https://github.com/batmanlab/Mammo-FM.",
+isbn="978-3-031-72390-2"
+}
+```
+
+## License and copyright
+
+Licensed under the Creative Commons Attribution 4.0 International
+
+Copyright © [Batman Lab](https://www.batman-lab.com/), 2024
+
+## Contact
+
+For any queries, contact [Shantanu Ghosh](https://shantanu-ai.github.io/) (email: **shawn24@bu.edu**)
+
+## Acknowledgements
+
+Special thanks to Boston University Masters
+students [Abhishek Varshney](https://www.linkedin.com/in/abhishek-varshney-a75748159/) & [Akshat Gurbuxani](https://www.linkedin.com/in/akshatgurbuxani/)
+for enabling multi-GPU support to Mammo-FM.
+
+## Contributing
+
+Did you try Mammo-FM on other datasets containing 2D-Mammograms and want to report the results? Feel free to send
+a [pull request](https://github.com/shantanu-ai/deep-learning-resources/pulls).
