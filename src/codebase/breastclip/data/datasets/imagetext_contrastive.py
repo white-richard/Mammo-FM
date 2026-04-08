@@ -52,7 +52,7 @@ class ImageTextDataset_contrastive(Dataset):
         return len(self.dataframe)
 
     def _get_img_path(self, study_id, image_id):
-        if self.dataset.lower() == 'upmc':
+        if self.dataset.lower() == 'img_text':
             return self.root_dir / self.img_dir / f'Patient_{study_id}' / image_id
         else:
             return self.root_dir / self.img_dir / f'{str(study_id)}' / image_id

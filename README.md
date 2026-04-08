@@ -89,7 +89,7 @@ python ./src/preprocessing/preprocess_image_to_png_vindr.py \
 ```bash
 .
 ├── list_tree_files.sh
-├── upmc_dicom_consolidated_final_folds_BIRADS_num_1_report.csv
+├── img_text_dicom_consolidated_final_folds_BIRADS_num_1_report.csv
 ├── clip_pretrain_100.csv
 └── DICOM/images_png_CC_MLO/
     ├── Patient_100/
@@ -180,14 +180,14 @@ parameter.
 
 ```bash
 DATASET_NAME="RSNA"
-CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar"
+CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/FM_BatmanlabTrained/b5_detector_n_modernbert_2048/checkpoints/fold_0/Mammo-FM_BatmanlabTrained.tar"
 DATA_DIR="/restricted/projectnb/batmanlab/shared/Data/RSNA_Breast_Imaging/Dataset"
 IMG_DIR="RSNA_Cancer_Detection/train_images_png"
 CSV_FILE="RSNA_Cancer_Detection/train_folds.csv"
 EXTRA_ARGS="--label 'cancer' --n_folds 1"
 LABEL="density"
 
-CLIP_CKPT="/restricted/projectnb/batmanlab/ayak/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bumc_clip/b5_detector_no_downstream_no_birads_prompt_period_no_cancer_no_ethnicity_n_modernbert_2048/checkpoints/fold_0/model-best.tar"
+CLIP_CKPT=""
 # Note: if you set CLIP_CKPT multiple times, the last assignment wins.
 
 python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/codebase/train_classifier.py \
@@ -217,7 +217,7 @@ python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/co
 
 ```bash
 DATASET_NAME="VINDR"
-CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar"
+CLIP_CKPT=""
 DATA_DIR="/restricted/projectnb/batmanlab/shared/Data/RSNA_Breast_Imaging/Dataset"
 IMG_DIR="External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/images_png"
 CSV_FILE="External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/vindr_detection_v1_folds_abnormal.csv"
@@ -253,7 +253,7 @@ python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/co
 
 ```bash
 DATASET_NAME="CMMD"
-CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar"
+CLIP_CKPT=""
 DATA_DIR="/restricted/projectnb/batmanlab/shawn24/Additional_Breast_data/ChineseMammoDataset"
 IMG_DIR="cmmd_png"
 CSV_FILE="cmmd_png/merged_final_cmmd.csv"
@@ -290,7 +290,7 @@ python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/co
 
 ```bash
 DATASET_NAME="NLBreast"
-CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar"
+CLIP_CKPT=""
 DATA_DIR="/restricted/projectnb/batmanlab/shared/Data/NL-Breast-Screen-data"
 IMG_DIR="NLBS_Data_png_v1"
 CSV_FILE="nlbs_image_labels.csv"
@@ -331,8 +331,9 @@ IMG_DIR="External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer
 CSV_FILE="External/Vindr/vindr-mammo-a-large-scale-benchmark-dataset-for-computer-aided-detection-and-diagnosis-in-full-field-digital-mammography-1.0.0/vindr_detection_v1_folds.csv"
 TASK_TYPE="Detection"
 
-CKPT_KEY="upmc_embed_bu_mayo"
-CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar"
+
+CLIP_CKPT=""
+CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/Mammo-FM/b5_detector_n_modernbert_2048/checkpoints/fold_0/Mammo-FM_BatmanlabTrained.tar"
 LABEL="Mass"
 ARCH="breast_clip_det_b5"
 

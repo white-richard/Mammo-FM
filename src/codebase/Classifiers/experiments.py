@@ -163,8 +163,6 @@ def do_experiments(args, device):
     oof_df = oof_df.reset_index(drop=True)
     if args.dataset.lower() == "embed":
         oof_df_agg = oof_df[['patient_id', args.label, 'prediction']].groupby(['patient_id']).max()
-    elif args.dataset.lower() == "upmc" or args.dataset.lower() == "bu":
-        oof_df_agg = oof_df[['patient_id', args.label, 'prediction']].groupby(['patient_id']).max()
     elif args.dataset.lower() == "nlbreast":
         oof_df_agg = oof_df
     else:
@@ -349,9 +347,6 @@ def train_loop(args, device):
         elif args.dataset.lower() == "rsna":
             valid_agg = args.valid_folds[['patient_id', 'laterality', args.label, 'prediction', 'fold']].groupby(
                 ['patient_id', 'laterality']).mean()
-        elif args.dataset.lower() == "upmc" or args.dataset.lower() == "bu":
-            valid_agg = args.valid_folds[['patient_id', 'image_laterality', args.label, 'prediction']].groupby(
-                ['patient_id', 'image_laterality']).max()
         elif args.dataset.lower() == "embed":
             valid_agg = args.valid_folds[['patient_id', 'laterality', args.label, 'prediction']].groupby(
                 ['patient_id', 'laterality']).max()
@@ -534,9 +529,6 @@ def inference_loop(args, device):
     elif args.dataset.lower() == "rsna":
         valid_agg = args.valid_folds[['patient_id', 'laterality', args.label, 'prediction', 'fold']].groupby(
             ['patient_id', 'laterality']).mean()
-    elif args.dataset.lower() == "upmc" or args.dataset.lower() == "bu":
-        valid_agg = args.valid_folds[['patient_id', 'image_laterality', args.label, 'prediction']].groupby(
-            ['patient_id', 'image_laterality']).max()
     elif args.dataset.lower() == "embed":
         valid_agg = args.valid_folds[['patient_id', 'laterality', args.label, 'prediction']].groupby(
             ['patient_id', 'laterality']).max()

@@ -36,18 +36,6 @@ class MammoDataset(Dataset):
         elif self.dataset.lower() == "embed":
             img_path = self.dir_path / str(self.df.iloc[idx]['anon_dicom_path'])
             img_path = str(img_path).replace('.dcm', '.png')
-        elif self.dataset.lower() == "upmc":
-            img_path = str(self.df.iloc[idx]['image_path'])
-            img_path = img_path.replace("/UPMC_with_embeddings/", "/UPMC/")
-        elif self.dataset.lower() == "bu":
-            img_path = str(self.df.iloc[idx]['image_path'])
-            exam_id = Path(img_path).parent.name
-            image_name = Path(img_path).name
-            bu_path = "/restricted/projectnb/batmanlab/shared/Data/RSNA_Breast_Imaging/Dataset/External/BU_Mammo/mammoclip"
-            if "controls" in img_path:
-                img_path = Path(bu_path) / "controls" / "test_images_png" / exam_id / image_name
-            elif "cases" in img_path:
-                img_path = Path(bu_path) / "cases" / "test_images_png" / exam_id / image_name
 
         elif self.dataset.lower() == "cmmd":
             img_path = self.dir_path/ str(self.df.iloc[idx]['patient_id'])/str(self.df.iloc[idx]['dicom_name'])
@@ -255,11 +243,8 @@ class MammoDataset_concept(Dataset):
         img_path = None
         study_id = None
         laterality = self.df.iloc[idx]['laterality']
-        if self.dataset.lower() == 'upmc' and self.target_dataset.lower() == 'upmc':
-            study_id = str(self.df.iloc[idx]['STUDY_ID'])
-            img_path = self.dir_path / f'Patient_{study_id}' / self.df.iloc[idx]['IMAGE_ID']
 
-        elif self.dataset.lower() == 'upmc' and self.target_dataset.lower() == 'rsna':
+        if self.target_dataset.lower() == 'rsna':
             study_id = self.df.iloc[idx]['STUDY_ID']
             img_path = self.dir_path / str(study_id) / str(self.df.iloc[idx]['IMAGE_ID'])
 
@@ -278,7 +263,7 @@ class MammoDataset_concept(Dataset):
         img = torch.tensor((img - self.args.mean) / self.args.std, dtype=torch.float32)
 
         y = None
-        if self.dataset.lower() == 'upmc' and self.target_dataset.lower() == 'rsna':
+        if self.target_dataset.lower() == 'rsna':
             y = torch.tensor(self.df.iloc[idx]['cancer'], dtype=torch.long)
         elif self.args.model_type.lower() == 'concept-classifier' and self.args.concept.lower() == 'clip_v1':
             y = self.df.iloc[idx]['CLIP_V1']

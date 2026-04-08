@@ -21,7 +21,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--chk_pt',
         type=str,
-        default="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/upmc_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/MammoCLIP_Mayo_UPMC_EMBED_BU_epoch4_BatmanlabTrained.tar",
+        default="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/img_text_embed_bu_mayo_clip/b5_detector_n_modernbert_2048/checkpoints/fold_0/Mammo-FM_BatmanlabTrained.tar",
         help='Full path to the pretrained checkpoint file.'
     )
 

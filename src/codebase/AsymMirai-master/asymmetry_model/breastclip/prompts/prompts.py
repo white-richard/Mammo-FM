@@ -2,7 +2,7 @@ import random
 
 
 def generate_report_from_labels(report, findings, prompt_json, deterministic=False):
-    # Image and view column of upmc_vindr should be in order of ["CC", "MLO"]
+    # Image and view column should be in order of ["CC", "MLO"]
     # CC_FINDING, MLO_FINDING are in order:
     # [[+ve right findings], [+ve left findings], [-ve right findings], [-ve left findings]]
     pos_right_findings, pos_left_findings, neg_right_findings, neg_left_findings = findings
