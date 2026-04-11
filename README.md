@@ -3,7 +3,7 @@
 Mammographic Diagnosis, Prognosis, and Reporting
 
 [![Paper](https://img.shields.io/badge/Paper-9cf)](https://arxiv.org/pdf/2512.00198)
-[![Hugging Face](https://huggingface.co/batmanLab/Mammo-FM)
+[![Hugging Face](https://img.shields.io/badge/Checkpoints-Hugging%20Face-yellow)](https://huggingface.co/batmanLab/Mammo-FM)
 [![VinDr png data](https://img.shields.io/badge/VinDr%20Mammogram%20png%20images-lightblue)](https://www.kaggle.com/datasets/shantanughosh/vindr-mammogram-dataset-dicom-to-png)
 ![](https://visitor-badge.laobi.icu/badge?page_id=batmanlab.FM&right_color=%23FFA500)
 
@@ -180,7 +180,7 @@ parameter.
 
 ```bash
 DATASET_NAME="RSNA"
-CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/Mammo-FM/b5_detector_n_modernbert_2048/checkpoints/fold_0/Mammo-FM_BatmanlabTrained_CLIP.tar"
+CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/Mammo-FM/b5_detector_n_modernbert_2048/checkpoints/fold_0/Mammo-FM_BatmanlabTrained.tar"
 DATA_DIR="/restricted/projectnb/batmanlab/shared/Data/RSNA_Breast_Imaging/Dataset"
 IMG_DIR="RSNA_Cancer_Detection/train_images_png"
 CSV_FILE="RSNA_Cancer_Detection/train_folds.csv"
@@ -333,7 +333,7 @@ TASK_TYPE="Detection"
 
 
 CLIP_CKPT=""
-CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/Mammo-FM/b5_detector_n_modernbert_2048/checkpoints/fold_0/Mammo-FM_BatmanlabTrained_CLIP.tar"
+CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/Mammo-FM/b5_detector_n_modernbert_2048/checkpoints/fold_0/Mammo-FM_BatmanlabTrained.tar"
 LABEL="Mass"
 ARCH="breast_clip_det_b5"
 
