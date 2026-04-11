@@ -180,7 +180,7 @@ parameter.
 
 ```bash
 DATASET_NAME="RSNA"
-CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/FM_BatmanlabTrained/b5_detector_n_modernbert_2048/checkpoints/fold_0/Mammo-FM_BatmanlabTrained.tar"
+CLIP_CKPT="/restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP/src/codebase/outputs/Mammo-FM/b5_detector_n_modernbert_2048/checkpoints/fold_0/Mammo-FM_BatmanlabTrained.tar"
 DATA_DIR="/restricted/projectnb/batmanlab/shared/Data/RSNA_Breast_Imaging/Dataset"
 IMG_DIR="RSNA_Cancer_Detection/train_images_png"
 CSV_FILE="RSNA_Cancer_Detection/train_folds.csv"
