@@ -1,6 +1,4 @@
-# Mammo-FM: Breast-specific foundational model for Integrated
-
-Mammographic Diagnosis, Prognosis, and Reporting
+# Mammo-FM: Breast-specific foundational model for Integrated Mammographic Diagnosis, Prognosis, and Reporting
 
 [![Paper](https://img.shields.io/badge/Paper-9cf)](https://arxiv.org/pdf/2512.00198)
 [![Hugging Face](https://img.shields.io/badge/Checkpoints-Hugging%20Face-yellow)](https://huggingface.co/batmanLab/Mammo-FM)
