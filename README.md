@@ -357,7 +357,8 @@ python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/co
 
 ## License and copyright
 
-Licensed under the Creative Commons Attribution 4.0 International
+The source code is Licensed under [Apache License 2.0](https://github.com/batmanlab/Mammo-FM/blob/main/LICENSE.txt).
+Model weights is Licensed under [Custom Academic License for Model Weights](https://github.com/batmanlab/Mammo-FM/blob/main/LICENSE_WEIGHTS.txt).
 
 Copyright © [Batman Lab](https://www.batman-lab.com/), 2026
 
