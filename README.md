@@ -7,10 +7,6 @@
 
 #### ⚠️ WARNING: We are updating this codebase, so if anyone finds any error, please contact us. We will try to resolve it ASAP.
 
-#### ⚠️ WARNING: Look for `/restricted/projectnb/batmanlab/shawn24/PhD` and replace it with your own path. E.g,
-
-`.src/codebase/breastclip/data/datasets/imagetext.py`, change the json path
-
 #### ⚠️ WARNING: There is a plethora of pre-processing settings available for RSNA and VinDr Mammo datasets. We recommend using the pre-processing discussed in the following sections. We are not responsible for any discrepancies in the results due to different pre-processing settings. If you use the VinDr png dataset uploaded in kaggle, it is fully pre-processed. Else you can use the pre-processing scripts provided in the following sections.
 
 #### ⚠️ WARNING: If you find the `punkt_tab` error, run the following command in the python environment:
@@ -23,7 +19,7 @@ nltk.download('punkt_tab')
 
 ## FAQ
 
-We follow our previous code [Mammo-FM](https://github.com/batmanlab/Mammo-FM) strictly. We will update the
+We follow our previous code [Mammo-CLIP](https://github.com/batmanlab/Mammo-CLIP) strictly. We will update the
 pretraining setup shortly. This code is for validating Mammo-FM checkpoints for diagnostic (e.g., downstream
 classification on linear probe and full-finetuning) performance only. Zero-shot, prognostic and report generation will
 be uploaded in coming weeks.
