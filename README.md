@@ -149,9 +149,10 @@ python ./src/preprocessing/preprocess_image_to_png_vindr.py \
 
 Following are the pre-training checkpoints of Mammo-FM:
 
-| Model architecture | Checkpoints (Hugging Face) |
-|--------------------|----------------------------|
-| Best performance   | [Efficient-Net B5]()       |
+| Model architecture               | Checkpoints (Hugging Face)                                                                                                   |
+|----------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| Last epoch on BU, UPMC and EMBED | [Mammo-FM_BatmanlabTrained_CLIP.tar](https://huggingface.co/batmanLab/Mammo-FM/blob/main/Mammo-FM_BatmanlabTrained_CLIP.tar) |
+| Last epoch on Mayo               | [Mammo-FM_ASU_Trained_CLIP.tar](https://huggingface.co/batmanLab/Mammo-FM/blob/main/Mammo-FM_ASU_Trained_CLIP.tar)           |
 
 ## Evaluation
 
@@ -355,6 +356,7 @@ python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/co
 ## Citation
 
 **Mammo-FM**
+
 ```bibtex
 @article{ghosh2025mammo,
   title={Mammo-FM: Breast-specific foundational model for Integrated Mammographic Diagnosis, Prognosis, and Reporting},
@@ -365,6 +367,7 @@ python /restricted/projectnb/batmanlab/shawn24/PhD/Breast-CLIP-downstream/src/co
 ```
 
 **Mammo-CLIP (MICCAI 2024)**
+
 ```bibtex
 @InProceedings{10.1007/978-3-031-72390-2_59,
 author="Ghosh, Shantanu
@@ -392,7 +395,8 @@ isbn="978-3-031-72390-2"
 ## License and copyright
 
 The source code is Licensed under [Apache License 2.0](https://github.com/batmanlab/Mammo-FM/blob/main/LICENSE.txt).
-Model weights is Licensed under [Custom Academic License for Model Weights](https://github.com/batmanlab/Mammo-FM/blob/main/LICENSE_WEIGHTS.txt).
+Model weights is Licensed
+under [Custom Academic License for Model Weights](https://github.com/batmanlab/Mammo-FM/blob/main/LICENSE_WEIGHTS.txt).
 
 Copyright © [Batman Lab](https://www.batman-lab.com/), 2026
 
