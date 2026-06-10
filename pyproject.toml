@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mammo-fm"
+version = "0.1.0"
+description = "Mammo-FM"
+requires-python = "==3.10.20"
+
+dependencies = [
+  "dvc",
+  "dvc_ssh",
+  "python-lsp-server",
+  "torch>=2.4",
+  "torchvision",
+  "torchaudio",
+  "timm",
+  "transformers",
+  "tokenizers",
+  "safetensors",
+  "huggingface-hub",
+  "nvidia-ml-py",
+  "albumentations",
+  "imgaug",
+  "opencv-python",
+  "scikit-image",
+  "pillow",
+  "imageio",
+  "pydicom",
+  "dicomsdl",
+  "numpy",
+  "pandas",
+  "scipy",
+  "scikit-learn",
+  "omegaconf",
+  "tqdm",
+  "click",
+  "regex",
+  "packaging",
+  "fsspec",
+  "pydantic",
+  "nltk",
+  "tensorboard",
+  "nvidia-ml-py",
+  "pypng>=0.20220715.0",
+  "tensorflow>=2.17.1",
+  "tensorflow-text>=2.17.0",
+  "ipython",
+  "latent-space[dinov3]",
+  "accelerate",
+  "nvidia-dali-cuda130",
+  "python-gdcm",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu128" }]
+torchvision = [{ index = "pytorch-cu128" }]
+latent-space = { path = "../latent-space", editable = true}
